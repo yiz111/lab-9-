@@ -1,0 +1,273 @@
+course_rooms = {
+    "CS101": 3004,
+    "CS102": 4501,
+    "CS103": 6755,
+    "NT110": 1244,
+    "CM241": 1411
+}
+
+course_instructors = {
+    "CS101": "Haynes",
+    "CS102": "Alvarado",
+    "CS103": "Rich",
+    "NT110": "Burke",
+    "CM241": "Lee"
+}
+
+course_times = {
+    "CS101": "8:00 AM",
+    "CS102": "9:00 AM",
+    "CS103": "10:00 AM",
+    "NT110": "11:00 AM",
+    "CM241": "1:00 PM"
+}
+
+course = "CS101"
+print(f"Course: {course}")
+print(f"Room: {course_rooms[course]}")
+print(f"Instructor: {course_instructors[course]}")
+print(f"Time: {course_times[course]}")
+
+
+
+
+
+import random
+
+states_capitals = {
+    "Alabama": "Montgomery",
+    "Alaska": "Juneau",
+    "Arizona": "Phoenix",
+    "Arkansas": "Little Rock",
+    "California": "Sacramento",
+    "Colorado": "Denver",
+    "Connecticut": "Hartford",
+    "Delaware": "Dover",
+    "Florida": "Tallahassee",
+    "Georgia": "Atlanta"
+}
+
+correct_count = 0
+incorrect_count = 0
+
+for _ in range(5):
+    state = random.choice(list(states_capitals.keys()))
+    capital = states_capitals[state]
+
+    answer = input(f"What is the capital of {state}? ")
+
+    if answer.strip().lower() == capital.lower():
+        print("Correct!")
+        correct_count += 1
+    else:
+        print(f"Incorrect! The capital of {state} is {capital}.")
+        incorrect_count += 1
+
+print(f"\nYou got {correct_count} correct and {incorrect_count} incorrect.")
+
+
+
+
+
+
+codes = {
+    'A': '%', 'B': '@', 'C': '#', 'D': '!', 'E': '$',
+    'F': '^', 'G': '&', 'H': '*', 'I': '(', 'J': ')',
+    'K': '-', 'L': '_', 'M': '=', 'N': '+', 'O': '[',
+    'P': ']', 'Q': '{', 'R': '}', 'S': ';', 'T': ':',
+    'U': '"', 'V': "'", 'W': '<', 'X': '>', 'Y': '?',
+    'Z': '/', 'a': '9', 'b': '8', 'c': '7', 'd': '6',
+    'e': '5', 'f': '4', 'g': '3', 'h': '2', 'i': '1',
+    'j': '0', 'k': 'z', 'l': 'y', 'm': 'x', 'n': 'w',
+    'o': 'v', 'p': 'u', 'q': 't', 'r': 's', 's': 'r',
+    't': 'q', 'u': 'p', 'v': 'o', 'w': 'n', 'x': 'm',
+    'y': 'l', 'z': 'k'
+}
+
+def encrypt_file(input_file, output_file):
+    with open(input_file, 'r') as infile, open(output_file, 'w') as outfile:
+        for line in infile:
+            encrypted_line = ''.join(codes.get(char, char) for char in line)
+            outfile.write(encrypted_line)
+
+def decrypt_file(input_file):
+    reverse_codes = {v: k for k, v in codes.items()}
+    with open(input_file, 'r') as infile:
+        for line in infile:
+            decrypted_line = ''.join(reverse_codes.get(char, char) for char in line)
+            print(decrypted_line, end='')
+
+encrypt_file('plain.txt', 'encrypted.txt')
+decrypt_file('encrypted.txt')
+
+
+
+
+
+
+
+def display_unique_words(filename):
+    with open(filename, 'r') as file:
+        words = set(file.read().lower().split())
+        print(words)
+
+def word_frequency(filename):
+    word_count = {}
+    with open(filename, 'r') as file:
+        for word in file.read().lower().split():
+            word_count[word] = word_count.get(word, 0) + 1
+    print(word_count)
+
+def file_analysis(file1, file2):
+    with open(file1, 'r') as f1, open(file2, 'r') as f2:
+        words1 = set(f1.read().lower().split())
+        words2 = set(f2.read().lower().split())
+
+        unique_words = words1 | words2
+        common_words = words1 & words2
+        only_in_file1 = words1 - words2
+        only_in_file2 = words2 - words1
+        either_in_files = words1 ^ words2
+
+        print(unique_words)
+        print(common_words)
+        print(only_in_file1)
+        print(only_in_file2)
+        print(either_in_files)
+
+display_unique_words('file.txt')
+word_frequency('file.txt')
+file_analysis('file1.txt', 'file2.txt')
+
+
+
+
+
+
+
+def read_winners(filename):
+    team_wins = {}
+    year_wins = {}
+    year = 1903
+
+    with open(filename, 'r') as file:
+        for line in file:
+            team = line.strip()
+            if team in ["No World Series", ""]:
+                year += 1
+                continue
+
+            year_wins[year] = team
+            team_wins[team] = team_wins.get(team, 0) + 1
+            year += 1
+
+    return team_wins, year_wins
+
+def main():
+    team_wins, year_wins = read_winners('WorldSeriesWinners.txt')
+    user_year = int(input("Enter a year between 1903 and 2009: "))
+
+    if user_year in year_wins:
+        winning_team = year_wins[user_year]
+        wins_count = team_wins[winning_team]
+        print(f"The team that won in {user_year} is {winning_team}, with a total of {wins_count} wins.")
+    else:
+        print(f"No World Series was played in {user_year}.")
+
+main()
+
+
+
+
+import pickle
+
+def load_contacts(filename):
+    try:
+        with open(filename, 'rb') as file:
+            return pickle.load(file)
+    except FileNotFoundError:
+        return {}
+
+def save_contacts(filename, contacts):
+    with open(filename, 'wb') as file:
+        pickle.dump(contacts, file)
+
+def display_menu():
+    print("1. Look up an email address")
+    print("2. Add a new contact")
+    print("3. Change an existing email address")
+    print("4. Delete a contact")
+    print("5. Exit")
+
+def main():
+    filename = 'contacts.pkl'
+    contacts = load_contacts(filename)
+
+    while True:
+        display_menu()
+        choice = input("Enter your choice: ")
+
+        if choice == '1':
+            name = input("Enter the name: ")
+            if name in contacts:
+                print(f"The email address for {name} is {contacts[name]}")
+            else:
+                print("Contact not found")
+
+        elif choice == '2':
+            name = input("Enter the name: ")
+            email = input("Enter the email address: ")
+            contacts[name] = email
+            print("Contact added")
+
+        elif choice == '3':
+            name = input("Enter the name: ")
+            if name in contacts:
+                email = input("Enter the new email address: ")
+                contacts[name] = email
+                print("Email updated")
+            else:
+                print("Contact not found")
+
+        elif choice == '4':
+            name = input("Enter the name: ")
+            if name in contacts:
+                del contacts[name]
+                print("Contact deleted")
+            else:
+                print("Contact not found")
+
+        elif choice == '5':
+            save_contacts(filename, contacts)
+            print("Contacts saved. Exiting program.")
+            break
+
+        else:
+            print("Invalid choice. Please try again.")
+
+main()
+
+
+
+
+
+
+def build_word_index(input_file, output_file):
+    word_index = {}
+
+    with open(input_file, 'r') as file:
+        line_number = 0
+        for line in file:
+            line_number += 1
+            words = line.strip().lower().split()
+            for word in words:
+                if word not in word_index:
+                    word_index[word] = []
+                word_index[word].append(line_number)
+
+    with open(output_file, 'w') as file:
+        for word in sorted(word_index):
+            line_numbers = ', '.join(map(str, word_index[word]))
+            file.write(f"{word}: {line_numbers}\n")
+
+build_word_index('Kennedy.txt', 'index.txt')
